@@ -1,9 +1,21 @@
-import { Request, Response, Router } from 'express';
+import { Request, Response, Router, NextFunction } from 'express';
 import { productsRepository } from '../repositories/products-repository';
 
 export const productsRouter = Router();
 
-productsRouter.get('/', (req: Request, res: Response) => {
+const authGuardMiddleware = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  if (req.query.token === '123') {
+    next();
+  } else {
+    res.send(401);
+  }
+};
+
+productsRouter.get('/', authGuardMiddleware, (req: Request, res: Response) => {
   const foundProducts = productsRepository.findProducts(
     req.query.title?.toString()
   );
