@@ -1,5 +1,7 @@
 import { Request, Response, Router, NextFunction } from 'express';
 import { productsRepository } from '../repositories/products-repository';
+import { body } from 'express-validator';
+import { inputValidationMiddleware } from '../middlewares/input-validation.middleware';
 
 export const productsRouter = Router();
 
@@ -14,6 +16,11 @@ const authGuardMiddleware = (
     res.send(401);
   }
 };
+
+const titleValidation = body('title')
+  .isLength({ min: 3, max: 10 })
+  .trim()
+  .withMessage('Title length should be from 3 to 10');
 
 productsRouter.get('/', authGuardMiddleware, (req: Request, res: Response) => {
   const foundProducts = productsRepository.findProducts(
@@ -34,10 +41,15 @@ productsRouter.get('/:id', (req: Request, res: Response) => {
   }
 });
 
-productsRouter.post('/', (req: Request, res: Response) => {
-  const { title } = req.body;
+productsRouter.post(
+  '/',
+  titleValidation,
+  inputValidationMiddleware,
+  (req: Request, res: Response) => {
+    const { title } = req.body;
 
-  const newProduct = productsRepository.createProduct(title);
+    const newProduct = productsRepository.createProduct(title);
 
-  res.status(201).send(newProduct);
-});
+    res.status(201).send(newProduct);
+  }
+);
