@@ -21,10 +21,10 @@ export const productsRepository = {
     }
   },
 
-  getProductById(id: number) {
+  async getProductById(id: number): Promise<ProductType | null> {
     const product = products.find((p) => p.id === id);
 
-    return product;
+    return product || null;
   },
 
   async createProduct(title: string): Promise<ProductType> {
@@ -47,5 +47,9 @@ export const productsRepository = {
     } else {
       return false;
     }
+  },
+
+  async deleteProduct(id: number): Promise<boolean> {
+    return false;
   },
 };

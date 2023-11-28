@@ -2,7 +2,7 @@ import { Request, Response, Router } from 'express';
 import {
   productsRepository,
   ProductType,
-} from '../repositories/products-repository';
+} from '../repositories/products-in-db-repository';
 import { body } from 'express-validator';
 
 import {
@@ -28,10 +28,10 @@ productsRouter.get(
   }
 );
 
-productsRouter.get('/:id', (req: Request, res: Response) => {
+productsRouter.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const product = productsRepository.getProductById(+id);
+  const product = await productsRepository.getProductById(+id);
 
   if (product) {
     res.send(product);
@@ -46,7 +46,7 @@ productsRouter.put('/:id', async (req: Request, res: Response) => {
   const isUpdated = await productsRepository.updateProduct(+id, req.body.title);
 
   if (isUpdated) {
-    const product = productsRepository.getProductById(+id);
+    const product = await productsRepository.getProductById(+id);
     res.send(product);
   } else {
     res.send(404);
@@ -67,3 +67,15 @@ productsRouter.post(
     res.status(201).send(newProduct);
   }
 );
+
+productsRouter.delete('/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  const isDeleted = await productsRepository.deleteProduct(+id);
+
+  if (isDeleted) {
+    res.send('Deleted');
+  } else {
+    res.send(404);
+  }
+});

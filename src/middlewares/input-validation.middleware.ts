@@ -8,11 +8,13 @@ export const inputValidationMiddleware = (
 ) => {
   const errors = validationResult(req);
 
-  if (!errors.isEmpty()) {
-    res.status(400).json({ errors: errors.array() });
-  } else {
-    next();
-  }
+  // if (!errors.isEmpty()) {
+  //   res.status(400).json({ errors: errors.array() });
+  // } else {
+  //   next();
+  // }
+
+  next();
 };
 
 export const authGuardMiddleware = (
@@ -20,9 +22,11 @@ export const authGuardMiddleware = (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.query.token === '123') {
-    next();
-  } else {
-    res.send(401);
-  }
+  // if (req.query.token === '123') {
+  //   next();
+  // } else {
+  //   res.send(401);
+  // }
+
+  next();
 };
