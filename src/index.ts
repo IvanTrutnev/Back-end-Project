@@ -14,11 +14,15 @@ app.use(express.urlencoded());
 app.use('/products', productsRouter);
 
 const startApp = async () => {
-  await runDb();
+  try {
+    await runDb();
 
-  app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`);
-  });
+    app.listen(port, () => {
+      console.log(`Example app listening on port ${port}`);
+    });
+  } catch (e) {
+    console.error(e);
+  }
 };
 
 startApp();
