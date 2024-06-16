@@ -17,6 +17,8 @@ const db = client.db('shop');
 export const productsCollection = db.collection<ProductType>('products');
 
 export async function runDb() {
+  console.log('try to connect db...');
+
   try {
     await client.connect();
     await client.db('products').command({ ping: 1 });
